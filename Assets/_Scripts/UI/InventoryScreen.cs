@@ -33,4 +33,9 @@ public class InventoryScreen : MonoBehaviour
     {
         m_Score.text = item.Amount.ToString();
     }
+
+    private void OnDestroy()
+    {
+        GameManager.OnInventoryItemValueChanged -= OnInventoryValueChanged;
+    }
 }

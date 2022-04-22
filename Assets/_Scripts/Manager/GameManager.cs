@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     private int currentLevelIndex = -1; // CurrentLevelData --> Not sure if needed, can just parse It and remove( will save memory)
 
-    private Objective currentObjective; // Objective Checker is in GameManager.. Can be moved to a different Class which solely check for Objective. Todo if I have time
+    private Objective currentObjective; // Objective Checker is in GameManager.. Can be moved to a different Class which solely check for Objective. Todo if I have time (Also Scriptable Objects but levelData in json.. so..)
 
     private Conditions m_Condition; // Checks whehter a condition is met, since Running in Update, Better to have a variable here..
 
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         SwitchGameState(GameState.MainMenu);
     }
 
-    private void ResetValues()
+    private void ResetValues() // Resetting Values
     {
         elapsedTime = lastCheckedTime = 0;
         foundWords = score = 0;
@@ -227,11 +227,6 @@ public class GameManager : MonoBehaviour
         InventoryItem item = ResourceManager.Instance.InventoryItem[type];
         item.Amount += value;
         OnInventoryItemValueChanged?.Invoke(item);
-    }
-
-    public void Print(string x)
-    {
-        Debug.Log(x);
     }
     #endregion
 

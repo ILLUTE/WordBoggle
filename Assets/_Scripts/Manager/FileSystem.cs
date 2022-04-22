@@ -33,28 +33,8 @@ public static class MyFileSystem
         {
             m_Trie.Add(m_Sort[i].ToCharArray());
 
-            #region
-            /*  if (m_ListOfWords.ContainsKey(strings[i].Length))
-              {
-                  m_ListOfWords[strings[i].Length].Add(strings[i]);
-              }
-              else
-              {
-                  m_ListOfWords.Add(strings[i].Length, new List<string> { strings[i] });
-              }*/
-            #endregion
-
+            result?.Invoke(m_Trie);
         }
-
-        /*    foreach (int x in m_ListOfWords.Keys)
-            {
-                m_ListOfWords[x].Sort((item, item1) =>
-                {
-                    return (string.Compare(item, item1, StringComparison.Ordinal));
-                });
-            }
-        */
-        result?.Invoke(m_Trie);
     }
 
     public static void LoadTextLevel(Action<LevelInfo> result)
@@ -131,9 +111,10 @@ public class Tries
             }
         }
 
-        if (flag) // this means atleast one word found.
+        if (flag) // this means atleast all the chars found.
         {
             builder.Append(chars); // Add the Prefix
+
             WordForming(temp, builder.ToString());
         }
 

@@ -44,15 +44,16 @@ public class TilesHandler : MonoBehaviour
     {
         int length = currentWord.Count;
 
-        if (length > 0)
+        if (length > 0) // If I have a word then only check if new tile is a neighbor
         {
-            if (!IsNeighbor(currentWord[length - 1].m_Index, tile.m_Index))
+            if (!currentWord[length - 1].IsNeighbour(tile))
             {
                 return;
             }
         }
 
-        if (currentWord.Contains(tile))
+
+        if (currentWord.Contains(tile)) // This is so that it basically backtracks, Maybe a better way.. I'll look if I get time todo.
         {
             List<LevelTile> tiles = new List<LevelTile>();
 
@@ -80,7 +81,7 @@ public class TilesHandler : MonoBehaviour
                     t.DeselectTile();
                 }
             }
-            if (tiles.Count == 1)
+            if (tiles.Count == 1) // this is like if I backtrack to start.. just unselect.
             {
                 tiles[0].DeselectTile();
 
@@ -156,6 +157,7 @@ public class TilesHandler : MonoBehaviour
         tilesGeneratedOnce = false;
     }
 
+    #region Generate Word Boggle From Data or Randomly
     private void GenerateTileSet(int bonusIndex = -1)
     {
         float tileWidth = 1.1f;
@@ -219,7 +221,9 @@ public class TilesHandler : MonoBehaviour
         }
         tilesGeneratedOnce = true;
     }
+    #endregion
 
+    #region EndlessBoggle
     private void MoveRowWise(Vector2Int[] tiles)
     {
         if (m_Mode == GameModes.Levels) //  Need this method only for Endless.
@@ -396,16 +400,11 @@ public class TilesHandler : MonoBehaviour
         return false;
     }
 
+    #endregion
+
     private bool IsEven(float x)
     {
         return x % 2 == 0;
-    }
-
-    private bool IsNeighbor(Vector2 l_Index, Vector2 n_Index)
-    {
-        Vector2 diff = l_Index - n_Index;
-
-        return (diff.x >= -1 && diff.x <= 1) && (diff.y >= -1 && diff.y <= 1);
     }
 
     private void CheckForWord()
@@ -481,7 +480,7 @@ public class TilesHandler : MonoBehaviour
     }
 
 
-    private List<LevelTile> GetNeighborBlocksFromCurrentWord()
+    private List<LevelTile> GetNeighborBlocksFromCurrentWord() // Just for level based...
     {
         List<LevelTile> neighbors = new List<LevelTile>();
 
@@ -511,34 +510,12 @@ public class TilesHandler : MonoBehaviour
 
         return neighbors;
     }
-    /* private bool IsWordPossible()
-     {
-         char[,] indices = new char[rows, columns];
 
-         for (int i = 0; i < rows; i++)
-         {
-             for (int j = 0; j < columns; j++)
-             {
-                 indices[i, j] = m_Tiles[i, j].GetCharacter();
-             }
-         }
-
-
-     }*/
-
-    private List<LevelTile> GetNeighbors(LevelTile tile,List<LevelTile> searchArea)
+    private void OnDestroy()
     {
-        List<LevelTile> neighbours = new List<LevelTile>();
-
-        foreach (LevelTile t in searchArea)
-        {
-            if (t.IsNeighbour(tile))
-            {
-                neighbours.Add(t);
-            }
-        }
-
-        return neighbours;
+        GameManager.OnTileSelected -= OnTileSelected;
+        GameManager.LoadGame -= SetupGrid;
+        GameManager.SearchWord -= CheckForWord;
     }
 }
 
